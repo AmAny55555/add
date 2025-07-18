@@ -12,9 +12,10 @@ import { useUser } from "../context/userContext";
 export default function TodoPage() {
   const router = useRouter();
   const dropdownRef = useRef(null);
-  const { profileImage } = useUser();
+
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [todoIdToDelete, setTodoIdToDelete] = useState(null);
+  const { profileImage, setProfileImage } = useUser();
 
   const [todos, setTodos] = useState([]);
   const [filteredTodos, setFilteredTodos] = useState([]);
@@ -262,6 +263,7 @@ export default function TodoPage() {
                 onClick={() => {
                   Cookies.remove("token");
                   localStorage.removeItem("profileImage");
+                  setProfileImage("/profile-default.jpg");
                   router.push("/login");
                 }}
                 className="w-full text-left px-4 py-2 hover:bg-red-100 text-red-500 flex items-center gap-2"

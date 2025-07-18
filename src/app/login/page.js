@@ -6,6 +6,7 @@ import Link from "next/link";
 import LoadingSpinner from "../LoadingSpinner";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
+import { useUser } from "../context/userContext";
 
 const loginSchema = z.object({
   username: z.string().min(1, "Username is required"),
@@ -14,6 +15,8 @@ const loginSchema = z.object({
 
 export default function Login() {
   const router = useRouter();
+  const { setProfileImage } = useUser();
+
   const [formData, setFormData] = useState({
     username: "",
     passwordHash: "",
@@ -75,8 +78,10 @@ export default function Login() {
           Cookies.set("token", data.token, { expires: 7 });
         }
 
-        // 🟢 إضافة هنا: احفظ صورة البروفايل الافتراضية للمستخدم الجديد
-        localStorage.setItem("profileImage", "/profile-default.jpg");
+        const imageFromApi = data.profileImage || "/profile-default.jpg";
+
+        setProfileImage(imageFromApi);
+        localStorage.setItem("profileImage", imageFromApi);
 
         router.push("/todo");
       } else if (response.status >= 500) {
